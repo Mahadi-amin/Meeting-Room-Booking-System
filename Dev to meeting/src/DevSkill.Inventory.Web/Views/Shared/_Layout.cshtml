@@ -1,0 +1,68 @@
+﻿﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] - DevSkill.Inventory.Web</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/DevSkill.Inventory.Web.styles.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,400i|PT+Serif:700" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/style.css">
+    <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
+
+    <link rel="icon" type="image/png" href="~/Login_v1/images/icons/favicon.ico" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login_v1/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login_v1/vendor/animate/animate.css">
+
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login_v1/vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login_v1/vendor/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Login_v1/css/util.css">
+    <link rel="stylesheet" type="text/css" href="~/Login_v1/css/main.css">
+    <!--===============================================================================================-->
+
+</head>
+<body class="is-boxed has-animations">
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+
+    <script src="~/js/main.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/Scripts/popper.min.js" asp-append-version="true"></script>
+
+    <!--===============================================================================================-->
+    <script src="~/Login_v1/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Login_v1/vendor/bootstrap/js/popper.js"></script>
+    <script src="~/Login_v1/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Login_v1/vendor/select2/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Login_v1/vendor/tilt/tilt.jquery.min.js"></script>
+    <script>
+        $('.js-tilt').tilt({
+            scale: 1.1
+        })
+    </script>
+    <!--===============================================================================================-->
+    <script src="~/js/main.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

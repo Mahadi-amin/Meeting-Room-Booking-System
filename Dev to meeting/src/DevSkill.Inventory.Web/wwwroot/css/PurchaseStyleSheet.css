@@ -1,0 +1,68 @@
+﻿/* Ensure select fills the entire <td> */
+td select.full-width {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+/* Optional: reduce padding/margin to make select fully cover <td> */
+td {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+select.form-control {
+    border: none;
+}
+
+/* Style the select element */
+select.full-width {
+    color: #333; /* Change the text color */
+    border: 1px solid #ccc; /* Adjust border style */
+    padding: 5px; /* Adjust padding */
+}
+
+/* Ensure the table cells are 6px smaller */
+td {
+    height: calc(100% - 6px); /* Reduce the height by 6px */
+    padding: 0; /* Remove padding to avoid extra space */
+    margin: 0; /* Remove margin */
+    background-color: #ffffff; /* Set background color to white */
+}
+
+/* Optional: If you want to set a fixed height */
+td {
+    height: 24px; /* Adjust to your desired height, subtracting 6px */
+}
+
+    /* Full-width select without padding inside td */
+    td select.full-width {
+        width: 100%;
+        height: 100%; /* Ensure the select fills the td completely */
+        padding: 0;
+        border: none;
+        box-sizing: border-box;
+    }
+
+/* Set the thead background color to red */
+thead {
+    background-color: #50659c;
+    color: white; /* Optional: Change the text color to white for better contrast */
+}
+
+    /* Style the table headers (optional) */
+    thead th {
+        padding: 10px;
+        text-align: center; /* Center the text */
+        border-bottom: 2px solid #ccc; /* Optional: Add a bottom border */
+    }
+
+/* Ensure all table cells have a white background */
+td {
+    background-color: #ffffff; /* Set background color to white */
+}
+
+
+.error {
+    border: 1px solid red;
+}

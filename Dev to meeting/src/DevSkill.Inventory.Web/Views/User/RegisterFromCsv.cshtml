@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Register Users from CSV";
+}
+
+<h2>Register Users from CSV</h2>
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="alert alert-info">@ViewBag.Message</div>
+}
+
+@if (ViewBag.Errors != null)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var error in (List<string>)ViewBag.Errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+
+<form asp-antiforgery="true" asp-action="RegisterFromCsv" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="file">Select CSV File:</label>
+        <input type="file" name="file" id="file" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Upload and Register</button>
+</form>
