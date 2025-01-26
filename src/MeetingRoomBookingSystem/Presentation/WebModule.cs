@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using DataAccess.Data;
 using Presentation.Data;
 
 namespace Presentation

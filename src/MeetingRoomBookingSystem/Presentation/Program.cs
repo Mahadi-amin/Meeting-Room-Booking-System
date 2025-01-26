@@ -8,6 +8,7 @@ using Serilog;
 using Serilog.Events;
 using System.Reflection;
 using DataAccess.Identity;
+using DataAccess.Data;
 
 #region Bootstrap Logger Configuration
 var configuration = new ConfigurationBuilder()
