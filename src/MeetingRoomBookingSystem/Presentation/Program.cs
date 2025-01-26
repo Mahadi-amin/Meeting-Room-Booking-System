@@ -7,6 +7,7 @@ using Presentation.Data;
 using Serilog;
 using Serilog.Events;
 using System.Reflection;
+using DataAccess.Identity;
 
 #region Bootstrap Logger Configuration
 var configuration = new ConfigurationBuilder()
@@ -53,8 +54,13 @@ try
 
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-    builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-        .AddEntityFrameworkStores<ApplicationDbContext>();
+    builder.Services
+        .AddIdentity<ApplicationUser, ApplicationRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddUserManager<ApplicationUserManager>()
+        .AddRoleManager<ApplicationRoleManager>()
+        .AddSignInManager<ApplicationSignInManager>()
+        .AddDefaultTokenProviders();
 
     builder.Services.AddControllersWithViews();
 
