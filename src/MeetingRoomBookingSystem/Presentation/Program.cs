@@ -3,9 +3,9 @@ using Autofac;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Presentation;
+using Presentation.Data;
 using Serilog;
 using Serilog.Events;
-using DataAccess.Data;
 using System.Reflection;
 
 #region Bootstrap Logger Configuration
@@ -33,34 +33,32 @@ try
         .ReadFrom.Configuration(builder.Configuration));
     #endregion
 
+
     // Add services to the container.
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
     var migrationAssembly = Assembly.GetExecutingAssembly().FullName;
 
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly)));
-
-    builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
-
-    builder.Services.AddRazorPages();
-
     #region Autofac Configuration
-
     builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
     builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     {
         containerBuilder.RegisterModule(new WebModule(connectionString, migrationAssembly));
     });
-
     #endregion
 
 
 
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(connectionString, (x) => x.MigrationsAssembly(migrationAssembly)));
+
+    builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+    builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        .AddEntityFrameworkStores<ApplicationDbContext>();
+
     builder.Services.AddControllersWithViews();
 
     var app = builder.Build();
-
-    Log.Information("Application Build...");
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())

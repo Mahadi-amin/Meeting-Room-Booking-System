@@ -1,6 +1,5 @@
 ﻿using Autofac;
-using DataAccess.Data;
-using DataAccess.Identity;
+using Presentation.Data;
 
 namespace Presentation
 {
@@ -8,15 +7,9 @@ namespace Presentation
     {
         protected override void Load(ContainerBuilder builder)
         {
-
             builder.RegisterType<ApplicationDbContext>().AsSelf()
                 .WithParameter("connectionString", connectionString)
                 .WithParameter("migrationAssembly", migrationAssembly)
-                .InstancePerLifetimeScope();
-
-            //UserService
-            builder.RegisterType<UserService>()
-                .As<IUserService>()
                 .InstancePerLifetimeScope();
         }
     }
