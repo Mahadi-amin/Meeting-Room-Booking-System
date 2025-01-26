@@ -1,4 +1,4 @@
-﻿namespace DataAccess.DTOs
+﻿namespace Services.Dtos
 {
     public class UserWithRolesDto
     {

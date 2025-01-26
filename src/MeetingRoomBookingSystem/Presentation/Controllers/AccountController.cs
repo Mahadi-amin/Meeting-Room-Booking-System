@@ -147,8 +147,6 @@ namespace Presentation.Controllers
 
             return View();
         }
-
-
         [AllowAnonymous]
         public async Task<IActionResult> LoginAsync(string returnUrl = null)
         {

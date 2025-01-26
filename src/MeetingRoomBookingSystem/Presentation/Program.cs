@@ -3,7 +3,6 @@ using Autofac;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Presentation;
-using Presentation.Data;
 using Serilog;
 using Serilog.Events;
 using System.Reflection;

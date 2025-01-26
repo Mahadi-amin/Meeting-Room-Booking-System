@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using DataAccess.Data;
-using Presentation.Data;
+using DataAccess.Identity;
 
 namespace Presentation
 {
@@ -11,6 +11,10 @@ namespace Presentation
             builder.RegisterType<ApplicationDbContext>().AsSelf()
                 .WithParameter("connectionString", connectionString)
                 .WithParameter("migrationAssembly", migrationAssembly)
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<UserService>()
+                .As<IUserService>()
                 .InstancePerLifetimeScope();
         }
     }
