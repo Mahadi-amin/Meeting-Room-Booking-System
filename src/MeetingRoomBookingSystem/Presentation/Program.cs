@@ -40,6 +40,7 @@ try
     var migrationAssembly = Assembly.GetExecutingAssembly().FullName;
 
     #region Autofac Configuration
+
     builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
     builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     {
@@ -86,9 +87,15 @@ try
     app.UseAuthorization();
 
     app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+    );
+
+    app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
-    app.MapRazorPages();
+
+    //app.MapRazorPages();
 
     app.Run();
 
