@@ -54,11 +54,6 @@ namespace Presentation.Controllers
 
                 var result = await _userManager.CreateAsync(user, model.Password);
 
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("RegisterFromCsv"); 
-                }
-
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -91,7 +86,7 @@ namespace Presentation.Controllers
 
             using (var reader = new StreamReader(file.OpenReadStream()))
             {
-                var header = reader.ReadLine(); // Skip the header row
+                var header = reader.ReadLine();
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
@@ -116,7 +111,7 @@ namespace Presentation.Controllers
                         continue; 
                     }
 
-                    var roleName = fields.Length > 7 ? fields[7].Trim() : "User"; // Adjusted for optional role name
+                    var roleName = fields.Length > 7 ? fields[7].Trim() : "User"; 
 
                     var user = new ApplicationUser
                     {
@@ -154,6 +149,69 @@ namespace Presentation.Controllers
 
             return View();
         }
+
+        public async Task<IActionResult> UpdateAsync(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
+            // Find the user by id (this could also be the username or another unique identifier)
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Populate the model with the existing user data
+            var model = new UpdateUserModel
+            {
+                Name = user.Name,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Department = user.Department,
+                Designation = user.Designation,
+                Pin = user.Pin
+            };
+
+            // Return the view with the existing user data
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAsync(UpdateUserModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.FindByIdAsync(model.Id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.Name = model.Name;
+            user.Email = model.Email;
+            user.PhoneNumber = model.PhoneNumber;
+            user.Department = model.Department;
+            user.Designation = model.Designation;
+            user.Pin = model.Pin;
+
+            var updateResult = await _userManager.UpdateAsync(user);
+
+            foreach (var error in updateResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
+        }
+
         [AllowAnonymous]
         public async Task<IActionResult> LoginAsync(string returnUrl = null)
         {

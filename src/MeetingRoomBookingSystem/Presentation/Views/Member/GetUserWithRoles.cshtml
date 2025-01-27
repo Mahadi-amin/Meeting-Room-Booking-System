@@ -39,12 +39,23 @@
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <a asp-action="ChangeRole" asp-route-id="@user.UserName" class="btn btn-sm btn-primary" title="Edit">
-                                        <i class="fas fa-edit"></i>
+                                    <a class="btn btn-sm" href="#" role="button" title="Edit or Delete" onclick="toggleDropdown(this)">
+                                        &#10247; <!-- Three dots icon -->
                                     </a>
-                                    <button class="btn btn-danger btn-sm" title="Delete" data-user-id="@user.UserName" data-user-name="@user.UserName" onclick="openDeleteModal(this)">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
+
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="display:none;">
+                                        <li>
+                                            <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Update" asp-route-id="@user.Id" title="Edit">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item text-danger" asp-area="" asp-controller="Account asp-action="Delete" asp-route-id="@user.Id" title="Delete" onclick="return confirm('Are you sure you want to delete this user?');">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </td>
                             </tr>
                         }
@@ -54,3 +65,9 @@
         </div>
     </div>
 </section>
+<script>
+    function toggleDropdown(element) {
+        var dropdownMenu = element.nextElementSibling;
+        dropdownMenu.style.display = (dropdownMenu.style.display === 'block') ? 'none' : 'block';
+    }
+</script>

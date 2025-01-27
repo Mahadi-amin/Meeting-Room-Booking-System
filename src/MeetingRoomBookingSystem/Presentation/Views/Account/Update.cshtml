@@ -1,24 +1,21 @@
-﻿@model RegistrationModel
-@{
-    ViewData["Title"] = "Register";
-}
+﻿@model UpdateUserModel
 
 <div class="col-md-8 col-lg-6 mx-auto">
-    <form id="registerForm" asp-action="Register" asp-controller="Account"
-          asp-antiforgery="true" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-        <h2 class="text-center mb-4">Register a New Account</h2>
+    <form id="updateForm" asp-action="Update" asp-controller="Account" method="post">
+        <h2 class="text-center mb-4">Update Your Account</h2>
         <hr />
 
         <!-- Validation summary -->
         <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
-        <!-- New Fields -->
+        <!-- Name Field -->
         <div class="form-floating mb-3">
             <input asp-for="Name" class="form-control" id="Name" placeholder="User Name" required />
             <label for="Name">Full Name</label>
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
+        <!-- Phone Number and Pin Fields (Row layout) -->
         <div class="row mb-3">
             <div class="col-md-6">
                 <div class="form-floating">
@@ -36,38 +33,28 @@
             </div>
         </div>
 
+        <!-- Department Field -->
         <div class="form-floating mb-3">
             <input asp-for="Department" class="form-control" id="Department" placeholder="Department" required />
             <label for="Department">Department</label>
             <span asp-validation-for="Department" class="text-danger"></span>
         </div>
 
+        <!-- Designation Field -->
         <div class="form-floating mb-3">
             <input asp-for="Designation" class="form-control" id="Designation" placeholder="Designation" required />
             <label for="Designation">Designation</label>
             <span asp-validation-for="Designation" class="text-danger"></span>
         </div>
 
-        <!-- Existing Fields -->
+        <!-- Email Field -->
         <div class="form-floating mb-3">
             <input asp-for="Email" class="form-control" id="Email" autocomplete="username" placeholder="name@example.com" required />
             <label for="Email">Email</label>
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
-        <div class="form-floating mb-3">
-            <input asp-for="Password" class="form-control" id="Password" autocomplete="new-password" placeholder="Password" required />
-            <label for="Password">Password</label>
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-
-
-        <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+        <!-- Update Button -->
+        <button id="updateSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Update</button>
     </form>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
-
-

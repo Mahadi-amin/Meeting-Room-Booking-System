@@ -19,10 +19,8 @@ namespace DataAccess.Identity
 
         public async Task<IEnumerable<UserWithRolesDto>> GetAllUsersAsync()
         {
-            // Step 1: Fetch users asynchronously.
             var users = await _context.Users.ToListAsync();
 
-            // Step 2: Fetch roles asynchronously for each user.
             var usersWithRoles = new List<UserWithRolesDto>();
 
             foreach (var user in users)
@@ -32,7 +30,7 @@ namespace DataAccess.Identity
                 usersWithRoles.Add(new UserWithRolesDto
                 {
                     UserName = user.UserName,
-                    RoleNames = roles.ToList()  // Store roles
+                    RoleNames = roles.ToList()  
                 });
             }
 

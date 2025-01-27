@@ -35,9 +35,11 @@ namespace Presentation.Controllers
             {
                 var roles = await _userManager.GetRolesAsync(user);
 
+                
                 usersWithRoles.Add(new UserRolesViewModel
                 {
-                    UserName = user.UserName,
+                    Id = user.Id,
+                    UserName = user.Name,
                     Pin = user.Pin,            
                     Email = user.Email,        
                     Phone = user.PhoneNumber,  
