@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Presentation.Models;
 
 namespace Presentation.Controllers
@@ -12,6 +13,7 @@ namespace Presentation.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<AccountController> _logger;
+        private readonly IUserService userService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -157,7 +159,6 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            // Find the user by id (this could also be the username or another unique identifier)
             var user = await _userManager.FindByIdAsync(id);
 
             if (user == null)
@@ -165,7 +166,6 @@ namespace Presentation.Controllers
                 return NotFound();
             }
 
-            // Populate the model with the existing user data
             var model = new UpdateUserModel
             {
                 Name = user.Name,
@@ -176,7 +176,6 @@ namespace Presentation.Controllers
                 Pin = user.Pin
             };
 
-            // Return the view with the existing user data
             return View(model);
         }
 
@@ -210,6 +209,33 @@ namespace Presentation.Controllers
             }
 
             return View(model);
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest("User ID cannot be null or empty.");
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("GetUserWithRoles", "Member");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View("UserList", await _userManager.Users.ToListAsync());
         }
 
         [AllowAnonymous]

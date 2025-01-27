@@ -18,11 +18,14 @@
 else
 {
     <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Member" asp-action="GetUserWithRoles">User</a>
+    </li>
+    <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="RegisterFromCsv">Register CSV</a>
     </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
-        </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+    </li>
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
     </li>

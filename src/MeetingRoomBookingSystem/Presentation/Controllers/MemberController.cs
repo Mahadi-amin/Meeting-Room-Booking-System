@@ -52,12 +52,5 @@ namespace Presentation.Controllers
 
             return View(usersWithRoles);
         }
-
-        public async Task<IActionResult> Index()
-        {
-            var users = await _userService.GetAllUsersAsync();
-            return View(users);
-        }
-
     }
 }
