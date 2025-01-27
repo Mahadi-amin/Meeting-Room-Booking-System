@@ -1,9 +1,11 @@
-﻿using Domain.Entities;
+﻿using AutoMapper;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Presentation.Models;
 using Services.Dtos;
 using Services.Interfaces;
+using System.Web;
 
 namespace Presentation.Controllers
 {
@@ -11,15 +13,24 @@ namespace Presentation.Controllers
     {
         private readonly IFileUploadService _fileUploadService;
         private readonly IMeetingRoomManagementService _meetingRoomManagementService;
+        private readonly IMapper _mapper;
         private readonly ILogger<MeetingRoomController> _logger;
 
         public MeetingRoomController(IFileUploadService fileUploadService,
             IMeetingRoomManagementService meetingRoomRepository,
+            IMapper mapper,
             ILogger<MeetingRoomController> logger)
         {
             _fileUploadService = fileUploadService;
             _meetingRoomManagementService = meetingRoomRepository;
+            _mapper = mapper;
             _logger = logger;
+        }
+
+
+        public IActionResult Index()
+        {
+            return View();
         }
 
         public IActionResult Create()
@@ -63,18 +74,7 @@ namespace Presentation.Controllers
                     }
                 }
 
-                var meetingRoom = new MeetingRoom
-                {
-                    Name = model.Name,
-                    Location = model.Location,
-                    Capacity = model.Capacity,
-                    Facilities = model.Facilities,
-                    Instructions = model.Instructions,
-                    TimeLimit = model.TimeLimit,
-                    Color = model.Color,
-                    Image = model.ImagePath,
-                    QRCode = model.QRCode
-                };
+                var meetingRoom = _mapper.Map<MeetingRoom>(model);
 
                 try
                 {
@@ -90,6 +90,133 @@ namespace Presentation.Controllers
             ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
             return View(model);
         }
+
+        public async Task<IActionResult> Update(Guid id)
+        {
+            var meetingRoom = await _meetingRoomManagementService.GetMeetingRoomByIdAsync(id);
+            if (meetingRoom == null)
+            {
+                return NotFound();
+            }
+
+            var model = _mapper.Map<MeetingRoomUpdateModel>(meetingRoom);
+
+            ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5" });
+            ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(MeetingRoomUpdateModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                string? imagePath = null;
+
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    try
+                    {
+                        var imageUploadDto = new FileUploadDto
+                        {
+                            FileContent = await ConvertToByteArrayAsync(model.ImageFile),
+                            FileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName).ToLower(),
+                            ContentType = model.ImageFile.ContentType
+                        };
+
+                        var imageFolderPath = Path.Combine("wwwroot", "meetingImages");
+                        imagePath = await _fileUploadService.UploadFileAsync(imageUploadDto, imageFolderPath);
+
+                        model.ImagePath = imagePath;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Image upload failed");
+                        ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5" });
+                        ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
+                        return View(model);
+                    }
+                }
+
+                var meetingRoom = _mapper.Map<MeetingRoom>(model);
+
+                try
+                {
+                    await _meetingRoomManagementService.UpdateMeetingAsync(meetingRoom);
+                    return RedirectToAction("Index"); 
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "An error occurred while updating the meeting room.");
+                }
+            }
+
+            ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5" });
+            ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
+
+            return View(model);
+        }
+
+        public JsonResult GetMeetingJsonData([FromBody] EntityListModel model)
+        {
+            var result = _meetingRoomManagementService.GetMeetingRooms(model.PageIndex, model.PageSize, model.Search,
+                model.FormatSortExpression("Name", "Location", "Capacity", "Facilities", "Instructions", "TimeLimit", "Image", "Color"));
+
+            var meetingJsonData = new
+            {
+                recordsTotal = result.total,
+                recordsFiltered = result.totalDisplay,
+                data = (from record in result.data
+                        select new string[]
+                        {
+                    HttpUtility.HtmlEncode(record.Name),
+                    HttpUtility.HtmlEncode(record.Location ?? "N/A"),
+                    HttpUtility.HtmlEncode(record.Capacity),
+                    HttpUtility.HtmlEncode(record.Facilities),
+                    HttpUtility.HtmlEncode(record.Instructions),
+                    HttpUtility.HtmlEncode(record.TimeLimit),
+                    HttpUtility.HtmlEncode(record.Image),
+                    HttpUtility.HtmlEncode(record.Color),
+                    record.Id.ToString()
+                        }
+                    ).ToArray()
+            };
+
+            return Json(meetingJsonData);
+        }
+
+        //public JsonResult GetMeetingRoomJsonData([FromBody] EntityListModel model)
+        //{
+        //    var result = _meetingRoomManagementService.GetMeetingRooms(model.PageIndex, model.PageSize, model.Search, model.FormatSortExpression("Name", "location", "Capacity", "facilities", "Description", "Color", "ImagePath", "Status", "AvailableDay", "Time"));
+
+        //    var ProductJsonData = new
+        //    {
+        //        recordsTotal = result.total,
+        //        recordsFiltered = result.totaldisplay,
+        //        data = (from record in result.data
+        //                select new string[]
+        //                {
+
+        //            "",
+        //            HttpUtility.HtmlEncode(record.ImagePath),
+        //            HttpUtility.HtmlEncode(record.Name),
+        //            HttpUtility.HtmlEncode(record.Facilities),
+        //            HttpUtility.HtmlEncode(record.Capacity),
+        //            HttpUtility.HtmlEncode(record.Color),
+        //            HttpUtility.HtmlEncode(record.Status ? "Active" : "Inactive"),
+
+        //            record.Id.ToString(),
+
+        //                }
+        //            ).ToArray()
+        //    };
+
+        //    return Json(ProductJsonData);
+        //}
+
+
+
         private async Task<byte[]> ConvertToByteArrayAsync(IFormFile file)
         {
             using (var ms = new MemoryStream())
@@ -97,11 +224,6 @@ namespace Presentation.Controllers
                 await file.CopyToAsync(ms);
                 return ms.ToArray();
             }
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
     }

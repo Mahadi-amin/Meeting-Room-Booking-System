@@ -7,5 +7,7 @@ namespace Domain.RepositoryContracts
         where TKey : IComparable
     {
         Task AddAsync(TEntity entity);
+        Task<TEntity> GetByIdAsync(TKey id);
+        Task EditAsync(TEntity entityToUpdate);
     }
 }

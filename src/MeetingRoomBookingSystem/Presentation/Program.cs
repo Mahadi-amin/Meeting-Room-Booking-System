@@ -48,6 +48,9 @@ try
     });
     #endregion
 
+    #region Automapper Configuration
+    builder.Services.AddAutoMapper(typeof(WebProfile).Assembly);
+    #endregion
 
 
     builder.Services.AddDbContext<ApplicationDbContext>(options =>

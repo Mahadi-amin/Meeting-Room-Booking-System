@@ -1,0 +1,49 @@
+﻿#products tbody tr {
+    cursor: pointer;
+}
+.modal-content {
+    box-shadow: none;
+    margin-left: 10px;
+}
+.modal-dialog-custom {
+    max-width: 90%;
+}
+
+@media print {
+    body {
+        margin: 0; 
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: #fff;
+    }
+
+    #printArea {
+        width: 100%;
+        margin: 0 auto;
+        padding: 20px; 
+        border: 1px solid #ccc;
+        border-radius: 5px; 
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 20px;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+
+    hr {
+        border: 1px solid #eee; 
+        margin: 20px 0;
+    }
+
+    .no-print {
+        display: none;
+    }
+}
+

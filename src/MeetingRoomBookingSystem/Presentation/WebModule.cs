@@ -4,9 +4,9 @@ using DataAccess.Identity;
 using DataAccess.Repositories;
 using DataAccess.UnitOfWorks;
 using Domain.RepositoryContracts;
-using Services;
 using Services.Implementations;
 using Services.Interfaces;
+using Services;
 
 namespace Presentation
 {
@@ -20,8 +20,8 @@ namespace Presentation
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<MeetingRoomUnitOfWork>()
-.As<IMeetingRoomUnitOfWork>()
-.InstancePerLifetimeScope();
+                .As<IMeetingRoomUnitOfWork>()
+                .InstancePerLifetimeScope();
 
             builder.RegisterType<UserService>()
                 .As<IUserService>()
@@ -31,9 +31,6 @@ namespace Presentation
                 .As<IFileUploadService>()
                 .InstancePerLifetimeScope();
 
-
-
-            //Meeting
             builder.RegisterType<MeetingRoomRepository>()
                 .As<IMeetingRoomRepository>()
                 .InstancePerLifetimeScope();
@@ -43,8 +40,8 @@ namespace Presentation
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<BookingRepository>()
-    .As<IBookingRepository>()
-    .InstancePerLifetimeScope();
+                .As<IBookingRepository>()
+                .InstancePerLifetimeScope();
         }
     }
 }
