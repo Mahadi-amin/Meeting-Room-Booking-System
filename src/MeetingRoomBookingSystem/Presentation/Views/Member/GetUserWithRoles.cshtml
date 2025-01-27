@@ -1,17 +1,22 @@
 ﻿<section class="content">
     <div class="container-fluid">
         <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">List of Users</h3>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0">List of Users</h3>
+                <a asp-area="" asp-controller="Account" asp-action="RegisterFromCsv" class="btn btn-primary">Add New User</a>
             </div>
+
             <div class="card-body">
                 <table id="usersTable" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>User Name</th>
-                            <th>Roles</th>
+                            <th>Name</th>
+                            <th>Pin</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Department</th>
+                            <th>Designation</th>
+                            <th>Status</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -19,18 +24,19 @@
                         @foreach (var user in Model)
                         {
                             <tr>
-                                <td>@user.FirstName</td>
-                                <td>@user.LastName</td>
                                 <td>@user.UserName</td>
+                                <td>@user.Pin</td>
+                                <td>@user.Email</td>
+                                <td>@user.Phone</td>
+                                <td>@user.Department</td>
+                                <td>@user.Designation</td>
                                 <td>
-                                    @if (user.Roles != null)
-                                    {
-                                        <span>@string.Join(", ", user.Roles)</span>
-                                    }
-                                    else
-                                    {
-                                        <span>No Roles</span>
-                                    }
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="statusSwitch_@user.UserName"
+                                        @(user.Status ? "checked" : "")
+                                               data-user-id="@user.UserName"
+                                               onclick="toggleStatus(this)">
+                                    </div>
                                 </td>
                                 <td class="text-center">
                                     <a asp-action="ChangeRole" asp-route-id="@user.UserName" class="btn btn-sm btn-primary" title="Edit">
@@ -45,11 +51,6 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer">
-                <a asp-area="" asp-controller="Account" asp-action="Register" class="btn btn-primary">Add New User</a>
-            </div>
         </div>
     </div>
 </section>
-
-

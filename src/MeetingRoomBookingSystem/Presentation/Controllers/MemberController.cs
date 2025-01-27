@@ -29,7 +29,6 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetUserWithRoles()
         {
             var users = _userManager.Users.ToList();
-
             var usersWithRoles = new List<UserRolesViewModel>();
 
             foreach (var user in users)
@@ -39,6 +38,12 @@ namespace Presentation.Controllers
                 usersWithRoles.Add(new UserRolesViewModel
                 {
                     UserName = user.UserName,
+                    Pin = user.Pin,            
+                    Email = user.Email,        
+                    Phone = user.PhoneNumber,  
+                    Department = user.Department,
+                    Designation = user.Designation, 
+                    Status = user.Status,  
                     Roles = roles
                 });
             }

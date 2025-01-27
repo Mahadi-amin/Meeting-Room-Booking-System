@@ -38,49 +38,43 @@ namespace Presentation.Controllers
         {
             model.ReturnUrl ??= Url.Content("~/");
             model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = model.Name,
+                    Email = model.Email,
+                    Name = model.Name,
+                    PhoneNumber = model.PhoneNumber,
+                    Department = model.Department,
+                    Designation = model.Designation,
+                    Pin = model.Pin
+                };
+
                 var result = await _userManager.CreateAsync(user, model.Password);
+
                 if (result.Succeeded)
                 {
-                    /*
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-                    */
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToAction("RegisterConfirmation", new { email = model.Email, returnUrl = model.ReturnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(model.ReturnUrl);
-                    }
+                    return RedirectToAction("RegisterFromCsv"); 
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        public IActionResult RegisterFromCsv()
+        public async Task<IActionResult> RegisterFromCsv(string returnUrl = null)
         {
-            return View();
+            var model = new RegistrationModel();
+            model.ReturnUrl = returnUrl;
+            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -103,27 +97,40 @@ namespace Presentation.Controllers
                     var line = reader.ReadLine();
                     var fields = line.Split(',');
 
-                    if (fields.Length < 4) // Ensure all required fields are present
+                    if (fields.Length < 7) 
                     {
-                        errors.Add("Invalid row format. Expected: FirstName, LastName, Email, Password, RoleName.");
+                        errors.Add("Invalid row format. Expected: Name, Pin, Email, Phone, Department, Designation, Status.");
                         continue;
                     }
 
-                    var firstName = fields[0].Trim();
-                    var lastName = fields[1].Trim();
+                    var name = fields[0].Trim(); 
+                    var pin = fields[1].Trim();
                     var email = fields[2].Trim();
-                    var password = fields[3].Trim();
-                    var roleName = fields.Length > 4 ? fields[4].Trim() : "DefaultRole";
+                    var phone = fields[3].Trim();
+                    var department = fields[4].Trim();
+                    var designation = fields[5].Trim();
+
+                    if (!bool.TryParse(fields[6].Trim(), out bool status))
+                    {
+                        errors.Add($"Invalid status value '{fields[6].Trim()}' for {email}. Must be 'true', 'false', '1', or '0'.");
+                        continue; 
+                    }
+
+                    var roleName = fields.Length > 7 ? fields[7].Trim() : "User"; // Adjusted for optional role name
 
                     var user = new ApplicationUser
                     {
-                        FirstName = firstName,
-                        LastName = lastName,
+                        Name = name, 
                         UserName = email,
-                        Email = email
+                        Email = email,
+                        PhoneNumber = phone,
+                        Department = department,
+                        Designation = designation,
+                        Status = status,
+                        Pin = pin
                     };
 
-                    var result = await _userManager.CreateAsync(user, password);
+                    var result = await _userManager.CreateAsync(user);
                     if (result.Succeeded)
                     {
                         await _userManager.AddToRoleAsync(user, roleName);

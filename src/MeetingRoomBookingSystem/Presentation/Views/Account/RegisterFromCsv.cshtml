@@ -1,14 +1,14 @@
-﻿@{
-    ViewData["Title"] = "Register Users from CSV";
+﻿@model RegistrationModel
+@{
+    ViewData["Title"] = "Register Users from CSV & Create Account";
 }
 
 @if (!string.IsNullOrEmpty(ViewBag.Message))
 {
-    <div class="alert alert-info">@ViewBag.Message</div>
+    <div class="alert alert-info">
+        @ViewBag.Message
+    </div>
 }
-
-<h2>Register Users from CSV</h2>
-
 
 @if (ViewBag.Errors != null)
 {
@@ -22,10 +22,22 @@
     </div>
 }
 
-<form asp-action="RegisterFromCsv" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="file">Select CSV File:</label>
-        <input type="file" name="file" id="file" class="form-control" />
+<div class="row justify-content-center">
+    <!-- CSV Upload Form -->
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm p-4">
+            <h3 class="text-center mb-4">Register Users from CSV</h3>
+            <form asp-action="RegisterFromCsv" method="post" enctype="multipart/form-data">
+                <div class="form-group mb-3">
+                    <label for="file" class="form-label">Select CSV File:</label>
+                    <input type="file" name="file" id="file" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Upload and Register</button>
+            </form>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Upload and Register</button>
-</form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

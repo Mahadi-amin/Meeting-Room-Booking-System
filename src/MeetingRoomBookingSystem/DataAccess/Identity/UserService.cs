@@ -31,8 +31,6 @@ namespace DataAccess.Identity
 
                 usersWithRoles.Add(new UserWithRolesDto
                 {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
                     UserName = user.UserName,
                     RoleNames = roles.ToList()  // Store roles
                 });
