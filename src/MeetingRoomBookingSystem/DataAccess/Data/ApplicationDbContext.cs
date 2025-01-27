@@ -1,4 +1,5 @@
 ﻿using DataAccess.Identity;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,5 +30,8 @@ namespace DataAccess.Data
 
             base.OnConfiguring(optionsBuilder);
         }
+
+        public DbSet<MeetingRoom> MeetingRooms { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
     }
 }
