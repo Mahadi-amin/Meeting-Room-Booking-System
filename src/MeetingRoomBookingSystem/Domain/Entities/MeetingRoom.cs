@@ -11,5 +11,8 @@
         public TimeSpan? TimeLimit { get; set; }
         public string? Image { get; set; }
         public string? QRCode { get; set; }
+
+        // Navigation property
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }
