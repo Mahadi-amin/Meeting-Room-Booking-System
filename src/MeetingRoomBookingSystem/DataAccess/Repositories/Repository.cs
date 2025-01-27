@@ -16,5 +16,10 @@ namespace DataAccess.Repositories
             _dbContext = context;
             _dbSet = _dbContext.Set<TEntity>();
         }
+
+        public virtual async Task AddAsync(TEntity entity) //this is the code
+        {
+            await _dbSet.AddAsync(entity);
+        }
     }
 }

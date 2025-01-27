@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using System.Linq.Expressions;
 
 namespace Domain.RepositoryContracts
 {
@@ -7,6 +6,6 @@ namespace Domain.RepositoryContracts
         where TEntity : class, IEntity<TKey>
         where TKey : IComparable
     {
-
+        Task AddAsync(TEntity entity);
     }
 }

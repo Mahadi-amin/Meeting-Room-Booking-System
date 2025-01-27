@@ -1,19 +1,17 @@
-﻿namespace Domain.Entities
+﻿namespace Presentation.Models
 {
-    public class MeetingRoom : IEntity<Guid>
+    public class MeetingRoomCreateModel
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Location { get; set; }
         public int Capacity { get; set; }
         public string? Facilities { get; set; }
-        public string? Instructions { get; set; }
+        public string Instructions { get; set; }
         public TimeSpan? TimeLimit { get; set; }
         public string? Image { get; set; }
         public string? QRCode { get; set; }
         public string? Color { get; set; }
-
-        // Navigation property
-        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        public string? ImagePath { get; set; }
+        public IFormFile? ImageFile { get; set; }
     }
 }

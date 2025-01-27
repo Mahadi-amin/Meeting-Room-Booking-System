@@ -39,13 +39,12 @@ namespace Presentation.Controllers
         public async Task<IActionResult> RegisterAsync(RegistrationModel model)
         {
             model.ReturnUrl ??= Url.Content("~/");
-            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser
                 {
-                    UserName = model.Name,
+                    UserName = model.Name.Replace(" ", "_"),
                     Email = model.Email,
                     Name = model.Name,
                     PhoneNumber = model.PhoneNumber,

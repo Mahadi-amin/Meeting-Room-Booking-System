@@ -1,0 +1,75 @@
+﻿@model MeetingRoomCreateModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="col-md-8 col-lg-6 mx-auto">
+    <h4>Create New Meeting</h4>
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Location" class="control-label"></label>
+            <input asp-for="Location" class="form-control" />
+            <span asp-validation-for="Location" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Capacity" class="control-label"></label>
+            <select asp-for="Capacity" class="form-control" asp-items="ViewBag.Capacity"></select>
+            <span asp-validation-for="Capacity" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Facilities" class="control-label">Facilities</label>
+            <input asp-for="Facilities" class="form-control"></input>
+            <span asp-validation-for="Facilities" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="Color">Meeting Room Color*</label>
+            <select asp-for="Color" class="form-control" asp-items="ViewBag.Color">
+                <option value="">Select Color</option>
+            </select>
+            <span asp-validation-for="Color" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="ImageFile">Upload Image</label>
+            <input type="file" name="ImageFile" class="form-control" />
+            <span asp-validation-for="ImageFile" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Instructions" class="control-label"></label>
+            <textarea asp-for="Instructions" class="form-control"></textarea>
+            <span asp-validation-for="Instructions" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Create Meeting Room</button>
+        </div>
+    </form>
+
+</div>
+
+
+@* Optional: Display errors if any *@
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@section Scripts {
+    @* Add validation scripts *@
+    <partial name="_ValidationScriptsPartial" />
+}
+
