@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DataAccess;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -36,7 +37,7 @@ namespace Presentation.Controllers
         public IActionResult Create()
         {
             var model = new MeetingRoomCreateModel();
-            ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5" });
+            ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
             ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
 
             return View(model);
@@ -68,8 +69,16 @@ namespace Presentation.Controllers
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Image upload failed");
-                        ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5" });
+                        // Re-populate dropdowns and return to the form if image upload fails
+                        ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
                         ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
+
+                        TempData.Put("ResponseMessage", new ResponseModel
+                        {
+                            Message = "Image upload failed",
+                            Type = ResponseTypes.Danger
+                        });
+
                         return View(model);
                     }
                 }
@@ -79,15 +88,32 @@ namespace Presentation.Controllers
                 try
                 {
                     await _meetingRoomManagementService.AddMeetingAsync(meetingRoom);
+
+                    TempData.Put("ResponseMessage", new ResponseModel
+                    {
+                        Message = "Meeting room created successfully",
+                        Type = ResponseTypes.Success
+                    });
+
+                    // Redirect to Index action after successful creation
+                    return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
+                    TempData.Put("ResponseMessage", new ResponseModel
+                    {
+                        Message = "An error occurred while creating the meeting room",
+                        Type = ResponseTypes.Danger
+                    });
+
                     _logger.LogError(ex, "An error occurred while creating the meeting room.");
                 }
             }
 
-            ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5" });
+            // Re-populate dropdowns if model validation fails
+            ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
             ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
+
             return View(model);
         }
 
@@ -101,7 +127,7 @@ namespace Presentation.Controllers
 
             var model = _mapper.Map<MeetingRoomUpdateModel>(meetingRoom);
 
-            ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5" });
+            ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
             ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
 
             return View(model);
@@ -133,29 +159,84 @@ namespace Presentation.Controllers
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Image upload failed");
-                        ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5" });
+
+                        // Store failure message in TempData
+                        TempData.Put("ResponseMessage", new ResponseModel
+                        {
+                            Message = "Image upload failed",
+                            Type = ResponseTypes.Danger
+                        });
+
+                        ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
                         ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
                         return View(model);
                     }
                 }
 
                 var meetingRoom = _mapper.Map<MeetingRoom>(model);
+                meetingRoom.Image = model.ImagePath;
+
 
                 try
                 {
                     await _meetingRoomManagementService.UpdateMeetingAsync(meetingRoom);
-                    return RedirectToAction("Index"); 
+
+                    // Store success message in TempData
+                    TempData.Put("ResponseMessage", new ResponseModel
+                    {
+                        Message = "Meeting room updated successfully",
+                        Type = ResponseTypes.Success
+                    });
+
+                    // Redirect to Index action after successful update
+                    return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "An error occurred while updating the meeting room.");
+
+                    // Store failure message in TempData
+                    TempData.Put("ResponseMessage", new ResponseModel
+                    {
+                        Message = "An error occurred while updating the meeting room",
+                        Type = ResponseTypes.Danger
+                    });
                 }
             }
 
-            ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5" });
+            // Re-populate dropdowns if model validation fails
+            ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
             ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
 
             return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Delete(Guid id)
+        {
+            try
+            {
+                _meetingRoomManagementService.DeleteMeetingRoom(id);
+
+                TempData.Put("ResponseMessage", new ResponseModel
+                {
+                    Message = "MeetingRoom deleted successfully.",
+                    Type = ResponseTypes.Success
+                });
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData.Put("ResponseMessage", new ResponseModel
+                {
+                    Message = "MeetingRoom deletion failed. Please try again.",
+                    Type = ResponseTypes.Danger
+                });
+                _logger.LogError(ex, "Error occurred while deleting the MeetingRoom with ID: {Id}.", id);
+            }
+
+            return RedirectToAction("Index");
         }
 
         public JsonResult GetMeetingJsonData([FromBody] EntityListModel model)

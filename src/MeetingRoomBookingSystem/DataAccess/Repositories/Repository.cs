@@ -40,7 +40,22 @@ namespace DataAccess.Repositories
             return await _dbSet.FindAsync(id);
         }
 
-        public virtual (IList<TEntity> data, int total, int totalDisplay) GetDynamic( //this is the code
+        public virtual void Remove(TKey id) //this is the code
+        {
+            var entityToDelete = _dbSet.Find(id);
+            Remove(entityToDelete);
+        }
+
+        public virtual void Remove(TEntity entityToDelete)//this is the code
+        {
+            if (_dbContext.Entry(entityToDelete).State == EntityState.Detached)
+            {
+                _dbSet.Attach(entityToDelete);
+            }
+            _dbSet.Remove(entityToDelete);
+        }
+
+        public virtual (IList<TEntity> data, int total, int totalDisplay) GetDynamic( 
            Expression<Func<TEntity, bool>> filter = null,
            string orderBy = null,
            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,

@@ -36,5 +36,11 @@ namespace Services.Implementations
         {
             return _meetingRoomUnitOfWork.MeetingRoomRepository.GetPagedMeetingRooms(pageIndex, pageSize, search, order);
         }
+
+        public void DeleteMeetingRoom(Guid id)
+        {
+            _meetingRoomUnitOfWork.MeetingRoomRepository.Remove(id);
+            _meetingRoomUnitOfWork.Save();
+        }
     }
 }

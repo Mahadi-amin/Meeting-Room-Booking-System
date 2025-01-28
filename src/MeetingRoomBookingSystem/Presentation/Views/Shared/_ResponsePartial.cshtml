@@ -1,0 +1,12 @@
+﻿@using DataAccess
+
+@if (TempData.Peek<ResponseModel>("ResponseMessage") != null)
+{
+    var response = TempData.Get<ResponseModel>("ResponseMessage");
+    <div class="alert alert-@(response.Type.ToString().ToLower())" role="alert" style="margin-left: 6px; margin-right: 6px;">
+        @response.Message
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}

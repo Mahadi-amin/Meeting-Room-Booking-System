@@ -8,6 +8,7 @@ namespace Services.Interfaces
         Task AddMeetingAsync(MeetingRoom meetingRoom);
         Task UpdateMeetingAsync(MeetingRoom meetingRoom);
         Task<MeetingRoom> GetMeetingRoomByIdAsync(Guid Id);
+        void DeleteMeetingRoom(Guid id);
         (IList<MeetingRoom> data, int total, int totalDisplay) GetMeetingRooms(int pageIndex, int pageSize,
             DataTablesSearch search, string? order);
     }

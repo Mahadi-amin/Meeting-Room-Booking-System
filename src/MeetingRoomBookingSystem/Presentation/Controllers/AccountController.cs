@@ -264,16 +264,9 @@ namespace Presentation.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return LocalRedirect(model.ReturnUrl);
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                 }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToAction("LoginWith2fa", new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    return RedirectToAction("Lockout");
-                }
+
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");

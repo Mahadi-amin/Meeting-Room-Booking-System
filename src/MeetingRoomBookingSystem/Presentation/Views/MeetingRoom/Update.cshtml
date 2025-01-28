@@ -33,13 +33,22 @@
         <span asp-validation-for="ImageFile" class="text-danger"></span>
     </div>
 
-    @if (!string.IsNullOrEmpty(Model.ImagePath))
-    {
-        <div class="form-group">
-            <p>Current Image:</p>
-            <img src="@Model.ImagePath" alt="Meeting Room Image" class="img-thumbnail" width="200" />
-        </div>
-    }
+    <div class="form-group">
+        <label asp-for="Location" class="control-label"></label>
+        <input asp-for="Location" class="form-control" />
+        <span asp-validation-for="Location" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Instructions" class="control-label"></label>
+        <textarea asp-for="Instructions" class="form-control"></textarea>
+        <span asp-validation-for="Instructions" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ImageFile">Upload Image</label>
+        <input type="file" name="ImageFile" id="ImageFile" class="form-control" />
+    </div>
 
     <button type="submit" class="btn btn-primary">Update</button>
 </form>
