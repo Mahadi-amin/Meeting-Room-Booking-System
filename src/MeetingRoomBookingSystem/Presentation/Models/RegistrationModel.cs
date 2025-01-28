@@ -5,7 +5,6 @@ namespace Presentation.Models
 {
     public class RegistrationModel
     {
-        // Existing properties
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
@@ -21,7 +20,6 @@ namespace Presentation.Models
 
         public IList<AuthenticationScheme>? ExternalLogins { get; set; }
 
-        // New fields
         [Required]
         [Display(Name = "Name")]
         public string Name { get; set; }

@@ -69,7 +69,6 @@ namespace Presentation.Controllers
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Image upload failed");
-                        // Re-populate dropdowns and return to the form if image upload fails
                         ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
                         ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
 
@@ -95,7 +94,6 @@ namespace Presentation.Controllers
                         Type = ResponseTypes.Success
                     });
 
-                    // Redirect to Index action after successful creation
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
@@ -110,7 +108,6 @@ namespace Presentation.Controllers
                 }
             }
 
-            // Re-populate dropdowns if model validation fails
             ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
             ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
 
@@ -160,7 +157,6 @@ namespace Presentation.Controllers
                     {
                         _logger.LogError(ex, "Image upload failed");
 
-                        // Store failure message in TempData
                         TempData.Put("ResponseMessage", new ResponseModel
                         {
                             Message = "Image upload failed",
@@ -181,21 +177,18 @@ namespace Presentation.Controllers
                 {
                     await _meetingRoomManagementService.UpdateMeetingAsync(meetingRoom);
 
-                    // Store success message in TempData
                     TempData.Put("ResponseMessage", new ResponseModel
                     {
                         Message = "Meeting room updated successfully",
                         Type = ResponseTypes.Success
                     });
 
-                    // Redirect to Index action after successful update
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "An error occurred while updating the meeting room.");
 
-                    // Store failure message in TempData
                     TempData.Put("ResponseMessage", new ResponseModel
                     {
                         Message = "An error occurred while updating the meeting room",
@@ -204,7 +197,6 @@ namespace Presentation.Controllers
                 }
             }
 
-            // Re-populate dropdowns if model validation fails
             ViewBag.Capacity = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
             ViewBag.Color = new SelectList(new[] { "Red", "Blue", "Green", "Purple", "Yellow" });
 
