@@ -12,6 +12,7 @@
         public string? Image { get; set; }
         public string? QRCode { get; set; }
         public string? Color { get; set; }
+        public bool? Status { get; set; } = true;
 
         // Navigation property
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();

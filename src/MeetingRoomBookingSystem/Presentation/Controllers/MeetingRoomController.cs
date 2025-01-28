@@ -170,14 +170,12 @@ namespace Presentation.Controllers
                 data = (from record in result.data
                         select new string[]
                         {
-                    HttpUtility.HtmlEncode(record.Name),
-                    HttpUtility.HtmlEncode(record.Location ?? "N/A"),
-                    HttpUtility.HtmlEncode(record.Capacity),
-                    HttpUtility.HtmlEncode(record.Facilities),
-                    HttpUtility.HtmlEncode(record.Instructions),
-                    HttpUtility.HtmlEncode(record.TimeLimit),
                     HttpUtility.HtmlEncode(record.Image),
+                    HttpUtility.HtmlEncode(record.Name),
+                    HttpUtility.HtmlEncode(record.Facilities),
+                    HttpUtility.HtmlEncode(record.Capacity),
                     HttpUtility.HtmlEncode(record.Color),
+                    HttpUtility.HtmlEncode(record.Status),
                     record.Id.ToString()
                         }
                     ).ToArray()
@@ -185,37 +183,6 @@ namespace Presentation.Controllers
 
             return Json(meetingJsonData);
         }
-
-        //public JsonResult GetMeetingRoomJsonData([FromBody] EntityListModel model)
-        //{
-        //    var result = _meetingRoomManagementService.GetMeetingRooms(model.PageIndex, model.PageSize, model.Search, model.FormatSortExpression("Name", "location", "Capacity", "facilities", "Description", "Color", "ImagePath", "Status", "AvailableDay", "Time"));
-
-        //    var ProductJsonData = new
-        //    {
-        //        recordsTotal = result.total,
-        //        recordsFiltered = result.totaldisplay,
-        //        data = (from record in result.data
-        //                select new string[]
-        //                {
-
-        //            "",
-        //            HttpUtility.HtmlEncode(record.ImagePath),
-        //            HttpUtility.HtmlEncode(record.Name),
-        //            HttpUtility.HtmlEncode(record.Facilities),
-        //            HttpUtility.HtmlEncode(record.Capacity),
-        //            HttpUtility.HtmlEncode(record.Color),
-        //            HttpUtility.HtmlEncode(record.Status ? "Active" : "Inactive"),
-
-        //            record.Id.ToString(),
-
-        //                }
-        //            ).ToArray()
-        //    };
-
-        //    return Json(ProductJsonData);
-        //}
-
-
 
         private async Task<byte[]> ConvertToByteArrayAsync(IFormFile file)
         {
