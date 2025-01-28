@@ -21,7 +21,6 @@ namespace Presentation.Controllers
             _userService = userService;
         }
 
-
         public async Task<IActionResult> GetUserWithRoles()
         {
             var users = _userManager.Users.ToList();

@@ -25,7 +25,6 @@ namespace Presentation.Controllers
             _logger = logger;
         }
 
-        [AllowAnonymous]
         public async Task<IActionResult> RegisterAsync(string returnUrl = null)
         {
             var model = new RegistrationModel();
@@ -34,8 +33,7 @@ namespace Presentation.Controllers
 
             return View(model);
         }
-
-        [HttpPost, ValidateAntiForgeryToken, AllowAnonymous]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterAsync(RegistrationModel model)
         {
             model.ReturnUrl ??= Url.Content("~/");
@@ -44,7 +42,7 @@ namespace Presentation.Controllers
             {
                 var user = new ApplicationUser
                 {
-                    UserName = model.Name.Replace(" ", "_"),
+                    UserName = model.Email,
                     Email = model.Email,
                     Name = model.Name,
                     PhoneNumber = model.PhoneNumber,
@@ -63,7 +61,6 @@ namespace Presentation.Controllers
 
             return View(model);
         }
-
         public async Task<IActionResult> RegisterFromCsv(string returnUrl = null)
         {
             var model = new RegistrationModel();
@@ -72,7 +69,6 @@ namespace Presentation.Controllers
 
             return View(model);
         }
-
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterFromCsv(IFormFile file)
         {
@@ -150,7 +146,6 @@ namespace Presentation.Controllers
 
             return View();
         }
-
         public async Task<IActionResult> UpdateAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -177,8 +172,7 @@ namespace Presentation.Controllers
 
             return View(model);
         }
-
-        [HttpPost]
+        [HttpPost,ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAsync(UpdateUserModel model)
         {
             if (!ModelState.IsValid)
@@ -209,7 +203,6 @@ namespace Presentation.Controllers
 
             return View(model);
         }
-
         public async Task<IActionResult> Delete(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -241,12 +234,12 @@ namespace Presentation.Controllers
         public async Task<IActionResult> LoginAsync(string returnUrl = null)
         {
             var model = new SigninModel();
-            model.ReturnUrl = returnUrl ?? Url.Content("~/");
+            model.ReturnUrl = returnUrl == null ? Url.Content("~/") : returnUrl;
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            //model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             return View(model);
         }
 
@@ -255,7 +248,7 @@ namespace Presentation.Controllers
         {
             model.ReturnUrl ??= Url.Content("~/");
 
-            //model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
             {
@@ -264,20 +257,13 @@ namespace Presentation.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Dashboard");
+                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
                 }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToAction("LoginWith2fa", new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    return RedirectToAction("Lockout");
-                }
+
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return RedirectToAction("Index", "Dashboard");
+                    return View(model);
                 }
             }
 

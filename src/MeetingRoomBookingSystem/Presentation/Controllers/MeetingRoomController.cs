@@ -28,7 +28,6 @@ namespace Presentation.Controllers
             _logger = logger;
         }
 
-
         public IActionResult Index()
         {
             return View();
@@ -42,8 +41,8 @@ namespace Presentation.Controllers
 
             return View(model);
         }
-
         [HttpPost, ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Create(MeetingRoomCreateModel model)
         {
             if (ModelState.IsValid)
